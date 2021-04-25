@@ -1,0 +1,34 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - master
+      - 202012
+  paths:
+    exclude:
+      - .github
+
+pr:
+  branches:
+    include:
+      - master
+      - 202012
+  paths:
+    exclude:
+      - .github
+
+name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+stages:
+- stage: Build
+  pool: sonicbld
+  jobs:
+  - job: Build
+    steps:
+    - script: |
+        echo "Build"
+      displayName: Build script
