@@ -48,10 +48,13 @@ stages:
           for msg_batch in messages.by_page():
             page = page + 1
             local_file_name = time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
+            build_messages = []
+            build_results = []
+            for msg in msg_batch:
+              print(msg.content)
+              build_messages.append(msg.content)
             with open(local_file_name, "w") as file:
-              for msg in msg_batch:
-                print(msg.content)
-                file.write(msg.content + "\n")
+              file.writelines(build_messages)
             blob_file_name = '$(BLOB_PREFIX)' + local_file_name
             blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
             with open(local_file_name, "rb") as data:
