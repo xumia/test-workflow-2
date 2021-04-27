@@ -39,7 +39,7 @@ stages:
         addToPath: true
         architecture: 'x64'
     - script: |
-        pip install azure-storage-queue
+        pip install azure-storage-queue azure-storage-blob
         pip --version
         pip list
         python --version
