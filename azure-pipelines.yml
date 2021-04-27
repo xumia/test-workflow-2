@@ -9,6 +9,7 @@ pr: none
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 variables:
+  QUEUE_NAME: "test"
   CONTAINER: "test"
   BLOB_PREFIX: "test/test-"
 
@@ -38,14 +39,24 @@ stages:
         scriptSource: 'inline'
         script: |
           import time
+          from azure.storage.queue import QueueServiceClient, QueueClient
           from azure.storage.blob import BlobServiceClient
+          queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', queue_name)
+          messages = queue_client.receive_messages(messages_per_page=20)
           blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
-          local_file_name = time.strftime("%Y%m%d-%H%M%S") + '.json'
-          blob_file_name = '$(BLOB_PREFIX)' + local_file_name
-          with open(local_file_name, "w") as file:
-            file.write("Hello, World!")
-          blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
-          with open(local_file_name, "rb") as data:
-            blob_client.upload_blob(data)
+          page = 0
+          for msg_batch in messages.by_page():
+            page = page + 1
+            local_file_name = str(page) + time.strftime("_%Y%m%d-%H%M%S") + '.json'
+            with open(local_file_name, "w") as file:
+              for msg in msg_batch:
+                print(msg.content)
+                file.write(msg.content + "\n")
+            blob_file_name = '$(BLOB_PREFIX)' + local_file_name
+            blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
+            with open(local_file_name, "rb") as data:
+              blob_client.upload_blob(data)
+            for msg in msg_batch:
+              queue_client.delete_message(msg)
       env:
         AZURE_STORAGE_CONNECTION_STRING: '$(AZURE_STORAGE_CONNECTION_STRING)'
