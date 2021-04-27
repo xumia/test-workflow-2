@@ -32,3 +32,15 @@ stages:
     - script: |
         echo "Build"
       displayName: Build script
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+        architecture: 'x64'
+    - script: |
+        pip --version
+      displayName: test
+    - task: PythonScript@0
+      inputs:
+        scriptSource: 'inline'
+        script: 'print(1)'
