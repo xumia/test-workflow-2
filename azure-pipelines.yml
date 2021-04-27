@@ -59,11 +59,13 @@ stages:
             local_file_name = time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
             build_messages = []
             build_results = []
+            msgs = []
             for msg in msg_batch:
+              msgs.append(msgs)
               print(msg.content)
               build_messages.append(msg.content)
             write_file(build_messages, '$(BLOB_PREFIX)')
-            #for msg in msg_batch:
+            #for msg in msgs:
             #  queue_client.delete_message(msg)
       env:
         AZURE_STORAGE_CONNECTION_STRING: '$(AZURE_STORAGE_CONNECTION_STRING)'
