@@ -56,7 +56,7 @@ stages:
             blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
             with open(local_file_name, "rb") as data:
               blob_client.upload_blob(data)
-            for msg in msg_batch:
-              queue_client.delete_message(msg)
+            #for msg in msg_batch:
+            #  queue_client.delete_message(msg)
       env:
         AZURE_STORAGE_CONNECTION_STRING: '$(AZURE_STORAGE_CONNECTION_STRING)'
