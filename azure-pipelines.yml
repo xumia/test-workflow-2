@@ -41,9 +41,18 @@ stages:
           import time
           from azure.storage.queue import QueueServiceClient, QueueClient
           from azure.storage.blob import BlobServiceClient
+          
+          blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
+          def write_file(lines, blob_prefix, file_prefix=""):
+            local_file_name = file_prefix + time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
+            with open(local_file_name, "w") as file:
+              file.writelines(lines)
+            blob_file_name = blob_prefix + local_file_name
+            blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
+            with open(local_file_name, "rb") as data:
+              blob_client.upload_blob(data)
           queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', '$(QUEUE_NAME)')
           messages = queue_client.receive_messages(messages_per_page=20)
-          blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
           page = 0
           for msg_batch in messages.by_page():
             page = page + 1
@@ -53,12 +62,7 @@ stages:
             for msg in msg_batch:
               print(msg.content)
               build_messages.append(msg.content)
-            with open(local_file_name, "w") as file:
-              file.writelines(build_messages)
-            blob_file_name = '$(BLOB_PREFIX)' + local_file_name
-            blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
-            with open(local_file_name, "rb") as data:
-              blob_client.upload_blob(data)
+            write_file(build_messages, '$(BLOB_PREFIX)')
             #for msg in msg_batch:
             #  queue_client.delete_message(msg)
       env:
