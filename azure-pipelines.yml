@@ -39,7 +39,7 @@ stages:
         scriptSource: 'inline'
         script: |
           import time
-          from azure.storage.queue import QueueServiceClient, QueueClient
+          from azure.storage.queue import QueueClient, BinaryBase64DecodePolicy
           from azure.storage.blob import BlobServiceClient
           
           blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
@@ -52,6 +52,7 @@ stages:
             with open(local_file_name, "rb") as data:
               blob_client.upload_blob(data)
           queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', '$(QUEUE_NAME)')
+          queue_client.message_decode_policy = BinaryBase64DecodePolicy()
           messages = queue_client.receive_messages(messages_per_page=20)
           page = 0
           for msg_batch in messages.by_page():
