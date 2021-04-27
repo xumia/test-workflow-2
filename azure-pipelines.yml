@@ -25,7 +25,8 @@ name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd
 
 stages:
 - stage: Build
-  pool: ubuntu-latest
+  pool:
+    vmImage: 'ubuntu-latest'
   jobs:
   - job: Build
     steps:
