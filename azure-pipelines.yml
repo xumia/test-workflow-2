@@ -38,12 +38,12 @@ stages:
         scriptSource: 'inline'
         script: |
           import time
-          blob_service_client = BlobServiceClient.from_connection_string($(AZURE_STORAGE_CONNECTION_STRING))
-          local_file_name = $(BLOB_PREFIX) + time.strftime("%Y%m%d-%H%M%S")
+          blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
+          local_file_name = '$(BLOB_PREFIX)' + time.strftime("%Y%m%d-%H%M%S")
           with open(upload_file_path, "w") as file:
             file.write("Hello, World!")
-          blob_client = blob_service_client.get_blob_client(container=$(CONTAINER), blob=local_file_name)
+          blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=local_file_name)
           with open(upload_file_path, "rb") as data:
             blob_client.upload_blob(data)
       env:
-        AZURE_STORAGE_CONNECTION_STRING: $(AZURE_STORAGE_CONNECTION_STRING)
+        AZURE_STORAGE_CONNECTION_STRING: '$(AZURE_STORAGE_CONNECTION_STRING)'
