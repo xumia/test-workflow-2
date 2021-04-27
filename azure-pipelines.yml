@@ -41,7 +41,7 @@ stages:
           import time
           from azure.storage.queue import QueueServiceClient, QueueClient
           from azure.storage.blob import BlobServiceClient
-          queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', queue_name)
+          queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', '$(QUEUE_NAME)')
           messages = queue_client.receive_messages(messages_per_page=20)
           blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
           page = 0
