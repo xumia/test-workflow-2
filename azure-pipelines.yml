@@ -47,4 +47,7 @@ stages:
     - task: PythonScript@0
       inputs:
         scriptSource: 'inline'
-        script: 'print(1)'
+        script: |
+          blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+      env:
+        AZURE_STORAGE_CONNECTION_STRING: $(AZURE_STORAGE_CONNECTION_STRING)
