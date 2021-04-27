@@ -40,6 +40,7 @@ stages:
         architecture: 'x64'
     - script: |
         pip --version
+        python --version
       displayName: test
     - task: PythonScript@0
       inputs:
