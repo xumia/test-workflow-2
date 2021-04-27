@@ -47,7 +47,7 @@ stages:
           page = 0
           for msg_batch in messages.by_page():
             page = page + 1
-            local_file_name = str(page) + time.strftime("_%Y%m%d-%H%M%S") + '.json'
+            local_file_name = time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
             with open(local_file_name, "w") as file:
               for msg in msg_batch:
                 print(msg.content)
