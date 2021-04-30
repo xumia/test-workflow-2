@@ -9,8 +9,8 @@ pr: none
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 variables:
-  QUEUE_NAME: "test"
-  CONTAINER: "test"
+  QUEUE_NAME: "builds"
+  CONTAINER: "build"
   BLOB_PREFIX: "test/test-"
 
 stages:
@@ -38,35 +38,96 @@ stages:
       inputs:
         scriptSource: 'inline'
         script: |
-          import time
-          from azure.storage.queue import QueueClient, BinaryBase64DecodePolicy
+          import datetime, base64, json, time, os
+          from urllib import request
+          from azure.storage.queue import QueueClient
           from azure.storage.blob import BlobServiceClient
-          
-          blob_service_client = BlobServiceClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)')
-          def write_file(lines, blob_prefix, file_prefix=""):
-            local_file_name = file_prefix + time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
+    
+    
+          QUEUE_NAME='$(QUEUE_NAME)'
+          CONTAINER='$(CONTAINER)'
+          AZURE_STORAGE_CONNECTION_STRING='$(AZURE_STORAGE_CONNECTION_STRING)'
+          BUILD_MESSAGES = 'buildmessages'
+          BUILD_INFOS = 'builds'
+          BUILD_LOGS = 'buildlogs'
+          MESSAGE_PER_PAGE = 10
+          MAX_PAGE_COUNT = 1
+          blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+          def upload_to_blob(lines, blob_prefix, file_prefix=""):
+            now = datetime.datetime.now()
+            local_file_name = file_prefix + now.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
             with open(local_file_name, "w") as file:
-              file.writelines(lines)
-            blob_file_name = blob_prefix + local_file_name
-            blob_client = blob_service_client.get_blob_client(container='$(CONTAINER)', blob=blob_file_name)
+              count = file.write('\n'.join(lines))
+            blob_file_name = blob_prefix + now.strftime("/%Y/%m/%d/") + local_file_name
+            blob_client = blob_service_client.get_blob_client(container=CONTAINER, blob=blob_file_name)
             with open(local_file_name, "rb") as data:
               blob_client.upload_blob(data)
-          queue_client = QueueClient.from_connection_string('$(AZURE_STORAGE_CONNECTION_STRING)', '$(QUEUE_NAME)')
-          queue_client.message_decode_policy = BinaryBase64DecodePolicy()
-          messages = queue_client.receive_messages(messages_per_page=20)
+            os.remove(local_file_name)
+          
+          def get_response(url):
+              for i in range(0, 3):
+                  try:
+                    print(url)
+                    response = request.urlopen(url)
+                    data=response.read()
+                    encoding = response.info().get_content_charset('utf-8')
+                    return data.decode(encoding)
+                  except Exception as e:
+                    print(e)
+                    time.sleep(10)
+              raise Exception("failed to get response from {0}".format(url))
+          
+          def get_build_logs(timeline_url):
+              timeline_content =  get_response(timeline_url)
+              if not timeline_content:
+                  return []
+              records = json.loads(timeline_content)['records']
+              results = []
+              for record in records:
+                  record['content'] = ""
+                  if record['log']:
+                      log_url = record['log']['url']
+                      log = get_response(log_url)
+                      record['content'] = log
+                  results.append(json.dumps(record))
+              return results
+          
+          queue_client = QueueClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING, QUEUE_NAME)
+          messages = queue_client.receive_messages(messages_per_page=MESSAGE_PER_PAGE)
           page = 0
           for msg_batch in messages.by_page():
-            page = page + 1
-            local_file_name = time.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
-            build_messages = []
-            build_results = []
-            msgs = []
-            for msg in msg_batch:
-              msgs.append(msgs)
-              print(msg.content)
-              build_messages.append(msg.content)
-            write_file(build_messages, '$(BLOB_PREFIX)')
-            #for msg in msgs:
-            #  queue_client.delete_message(msg)
+              page = page + 1
+              if page > MAX_PAGE_COUNT:
+                  break
+              local_file_name = datetime.datetime.now().strftime("_%Y%m%d-%H%M%S-%f") + '.json'
+              build_messages = []
+              build_results = []
+              msgs = []
+              build_infos = []
+              build_logs = []
+              msg_count = 0
+              for msg in msg_batch:
+                  msg_count = msg_count + 1
+                  print("process message {} on page {}, current log count {}".format(msg_count, page, len(build_logs)))
+                  msgs.append(msg)
+                  msg_content = base64.b64decode(msg.content)
+                  build = json.loads(msg_content)
+                  content = json.dumps(build, separators=(',', ':'))
+                  build_messages.append(content)
+                  build_url = build['resource']['url']
+                  build_content = get_response(build_url)
+                  if not content:
+                      print("Skipped the message for no build content, the message: {}".format(msg_content))
+                      continue
+                  build_info = json.loads(build_content)
+                  build_infos.append(build_content)
+                  timeline_url = build_info['_links']['timeline']['href']
+                  logs = get_build_logs(timeline_url)
+                  build_logs += logs
+              upload_to_blob(build_messages, BUILD_MESSAGES)
+              upload_to_blob(build_infos, BUILD_INFOS)
+              upload_to_blob(build_logs, BUILD_LOGS)
+              #for msg in msgs:
+              #    queue_client.delete_message(msg)
       env:
         AZURE_STORAGE_CONNECTION_STRING: '$(AZURE_STORAGE_CONNECTION_STRING)'
