@@ -19,6 +19,7 @@ stages:
     vmImage: 'ubuntu-latest'
   jobs:
   - job: Build
+    timeoutInMinutes: 60
     steps:
     - script: |
         echo "Build"
