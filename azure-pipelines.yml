@@ -48,6 +48,8 @@ stages:
           MESSAGE_PER_PAGE = 10
           MAX_PAGE_COUNT = 30
           blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+
+          # Upload a list of lines to blob
           def upload_to_blob(lines, blob_prefix, file_prefix=""):
             now = datetime.datetime.now()
             local_file_name = file_prefix + now.strftime("_%Y%m%d-%H%M%S-%f") + '.json'
@@ -59,6 +61,7 @@ stages:
               blob_client.upload_blob(data)
             os.remove(local_file_name)
 
+          # Download the web content from the url
           def get_response(url):
               for i in range(0, 3):
                   try:
@@ -72,6 +75,7 @@ stages:
                     time.sleep(10)
               raise Exception("failed to get response from {0}".format(url))
 
+          # Get the build logs
           def get_build_logs(timeline_url):
               timeline_content =  get_response(timeline_url)
               if not timeline_content:
