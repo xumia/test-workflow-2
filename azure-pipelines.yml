@@ -42,8 +42,7 @@ stages:
           from urllib import request
           from azure.storage.queue import QueueClient
           from azure.storage.blob import BlobServiceClient
-    
-    
+
           QUEUE_NAME='$(QUEUE_NAME)'
           CONTAINER='$(CONTAINER)'
           AZURE_STORAGE_CONNECTION_STRING='$(AZURE_STORAGE_CONNECTION_STRING)'
@@ -63,7 +62,7 @@ stages:
             with open(local_file_name, "rb") as data:
               blob_client.upload_blob(data)
             os.remove(local_file_name)
-          
+
           def get_response(url):
               for i in range(0, 3):
                   try:
@@ -76,7 +75,7 @@ stages:
                     print(e)
                     time.sleep(10)
               raise Exception("failed to get response from {0}".format(url))
-          
+
           def get_build_logs(timeline_url):
               timeline_content =  get_response(timeline_url)
               if not timeline_content:
@@ -91,7 +90,7 @@ stages:
                       record['content'] = log
                   results.append(json.dumps(record))
               return results
-          
+
           queue_client = QueueClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING, QUEUE_NAME)
           messages = queue_client.receive_messages(messages_per_page=MESSAGE_PER_PAGE)
           page = 0
