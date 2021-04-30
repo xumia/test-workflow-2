@@ -8,10 +8,6 @@ pr: none
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
-variables:
-  QUEUE_NAME: "builds"
-  CONTAINER: "build"
-
 stages:
 - stage: Build
   pool:
@@ -43,14 +39,14 @@ stages:
           from azure.storage.queue import QueueClient
           from azure.storage.blob import BlobServiceClient
 
-          QUEUE_NAME='$(QUEUE_NAME)'
-          CONTAINER='$(CONTAINER)'
+          QUEUE_NAME="builds"
+          CONTAINER="build"
           AZURE_STORAGE_CONNECTION_STRING='$(AZURE_STORAGE_CONNECTION_STRING)'
           BUILD_MESSAGES = 'buildmessages'
           BUILD_INFOS = 'builds'
           BUILD_LOGS = 'buildlogs'
           MESSAGE_PER_PAGE = 10
-          MAX_PAGE_COUNT = 1
+          MAX_PAGE_COUNT = 30
           blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
           def upload_to_blob(lines, blob_prefix, file_prefix=""):
             now = datetime.datetime.now()
@@ -92,7 +88,7 @@ stages:
               return results
 
           queue_client = QueueClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING, QUEUE_NAME)
-          messages = queue_client.receive_messages(messages_per_page=MESSAGE_PER_PAGE)
+          messages = queue_client.receive_messages(messages_per_page=MESSAGE_PER_PAGE, visibility_timeout=3600)
           page = 0
           for msg_batch in messages.by_page():
               page = page + 1
