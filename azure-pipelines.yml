@@ -9,9 +9,8 @@ pr: none
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 variables:
-  QUEUE_NAME: "builds"
+  QUEUE_NAME: "test"
   CONTAINER: "build"
-  BLOB_PREFIX: "test/test-"
 
 stages:
 - stage: Build
