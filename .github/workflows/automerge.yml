@@ -18,5 +18,5 @@ jobs:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         MERGE_LABELS: 'automerge'
         MERGE_METHOD: 'squash'
-        MERGE_FILTER_AUTHOR: 'mssonicbld'
+        MERGE_FILTER_AUTHOR: 'MiaoXuHui'
         MERGE_DELETE_BRANCH: true
