@@ -19,4 +19,4 @@ jobs:
         MERGE_LABELS: 'automerge'
         MERGE_METHOD: 'squash'
         MERGE_FILTER_AUTHOR: 'MiaoXuHui'
-        MERGE_DELETE_BRANCH: true
+        MERGE_DELETE_BRANCH: false
