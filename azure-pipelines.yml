@@ -34,5 +34,5 @@ stages:
         python --version
       displayName: test
     - script: |
-        sleep 300
+        sleep 120
       displayName: test
