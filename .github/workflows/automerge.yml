@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: automerge
-      uses: 'xumia/automerge-action@master'
+      uses: 'pascalgn/automerge-action@v0.13.1'
       with:
         args: "--trace"
       env:
