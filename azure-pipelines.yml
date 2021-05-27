@@ -24,7 +24,7 @@ schedules:
 
 stages:
 - stage: Build
-  condition: ${{ containsValue(parameters.platforms, 'vs') }}
+  condition: ${{ containsValue(parameters.platforms, 'vs1') }}
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
