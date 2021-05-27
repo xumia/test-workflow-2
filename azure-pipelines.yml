@@ -22,6 +22,7 @@ schedules:
 
 stages:
 - stage: Build
+  condition: ${{ containsValue(parameters.parameters, "vs") }}
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
