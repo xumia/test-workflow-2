@@ -12,8 +12,9 @@ schedules:
 - cron: "0 0 * * *"
   displayName: Daily midnight build
   branches:
-    include:
-    - master
+    ${{ eq('a', 'a') }}:
+      include:
+      - master
 
 stages:
 - stage: Build
