@@ -13,8 +13,7 @@ schedules:
   displayName: Daily midnight build
   branches:
     include:
-    - ${{ eq('a', 'a') }}:
-      - master
+    - master
 
 stages:
 - stage: Build
