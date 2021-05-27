@@ -8,5 +8,22 @@ pr: none
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
-extends:
-  template: schedule-template.yml
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily midnight build
+  branches:
+    include:
+    - ${{ eq('a', 'a') }}:
+      - master
+
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+  - job: Build
+    timeoutInMinutes: 60
+    steps:
+    - script: |
+        echo "Build"
+      displayName: Build script
