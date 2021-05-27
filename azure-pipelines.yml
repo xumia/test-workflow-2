@@ -14,7 +14,7 @@ parameters:
   default: "0 0 * * *"
 
 schedules:
-- cron: ${{ parameters.cronDaily }}
+- cron: "0 0 * * *"
   displayName: Daily midnight build
   branches:
     include:
