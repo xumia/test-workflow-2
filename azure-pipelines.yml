@@ -6,6 +6,9 @@
 trigger: none
 pr: none
 
+extends:
+  template: schedule-template.yml
+
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 stages:
@@ -19,17 +22,3 @@ stages:
     - script: |
         echo "Build"
       displayName: Build script
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-        architecture: 'x64'
-    - script: |
-        pip install azure-storage-queue azure-storage-blob
-        pip --version
-        pip list
-        python --version
-      displayName: test
-    - script: |
-        sleep 120
-      displayName: test
