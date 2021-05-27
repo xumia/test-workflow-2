@@ -9,9 +9,11 @@ pr: none
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 parameters:
-- name: "cronDaily"
-  type: string
-  default: "0 0 * * *"
+- name: "platforms"
+  type: object
+  default:
+  - vs
+  - broadcom
 
 schedules:
 - cron: "0 0 * * *"
@@ -22,7 +24,7 @@ schedules:
 
 stages:
 - stage: Build
-  condition: ${{ containsValue(parameters.parameters, "vs") }}
+  condition: ${{ containsValue(parameters.platforms, "vs") }}
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
