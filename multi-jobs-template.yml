@@ -1,0 +1,18 @@
+prameters:
+- name: jobs
+  type: jobList
+  default: []
+
+jobs:
+- ${{ each job in parameters.jobs }}:
+  - ${{ each pair in job }}:
+      ${{ if ne(pair.key, 'steps') }}:
+        ${{ pair.key }}: ${{ pair.value }}
+    steps:
+    - script: |
+        echo "Pre Step"
+      displayName: Pre Step
+    - ${{ job.steps }}
+    - script: |
+        echo "Post Step"
+      displayName: Post Step
