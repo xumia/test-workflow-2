@@ -33,4 +33,10 @@ stages:
     steps:
     - script: |
         echo "Build"
+        mkdir $(Build.ArtifactStagingDirectory)/target
+        echo test > $(Build.ArtifactStagingDirectory)/target/test
       displayName: Build script
+
+    - publish:  $(Build.ArtifactStagingDirectory)
+      artifact: 'test'
+      displayName: "Archive artifacts"
