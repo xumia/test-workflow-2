@@ -35,6 +35,7 @@ stages:
         echo "Build"
         mkdir $(Build.ArtifactStagingDirectory)/target
         echo test > $(Build.ArtifactStagingDirectory)/target/test
+        echo $(Build.BuildId) > $(Build.ArtifactStagingDirectory)/target/$(Build.BuildId)
       displayName: Build script
 
     - publish:  $(Build.ArtifactStagingDirectory)
