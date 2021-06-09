@@ -1,5 +1,6 @@
-job:
-steps:
-- script: |
-    echo single job
-  displayName: Single Job
+jobs
+- job: SingleJob
+  steps:
+  - script: |
+      echo single job
+    displayName: Single Job
