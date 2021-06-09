@@ -1,4 +1,4 @@
-prameters:
+parameters:
 - name: jobs
   type: jobList
   default: []
