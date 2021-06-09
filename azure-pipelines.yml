@@ -28,16 +28,7 @@ stages:
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
-  - job: Build
-    timeoutInMinutes: 60
-    steps:
-    - script: |
-        echo "Build"
-        mkdir $(Build.ArtifactStagingDirectory)/target
-        echo test > $(Build.ArtifactStagingDirectory)/target/test
-        echo $(Build.BuildId) > $(Build.ArtifactStagingDirectory)/target/$(Build.BuildId)
-      displayName: Build script
-
-    - publish:  $(Build.ArtifactStagingDirectory)
-      artifact: 'test'
-      displayName: "Archive artifacts"
+  - template: multi-jobs-template.yml
+    parameters:
+      jobs:
+      - template: single-job.yml
