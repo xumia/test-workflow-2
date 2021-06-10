@@ -21,6 +21,8 @@ schedules:
   branches:
     include:
     - none
+    - ${{ if eq('a', 'a') }}:
+      - test
 
 stages:
 - stage: Build
