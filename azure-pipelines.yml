@@ -15,14 +15,13 @@ parameters:
   - vs
   - broadcom
 
-schedules:
-- cron: "0 0 * * *"
-  displayName: Daily midnight build
-  branches:
-    include:
-    - none
-    - ${{ if eq('a', 'a') }}:
-      - test
+${{ if eq('a', 'a') }}:
+  schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+      - none
 
 stages:
 - stage: Build
