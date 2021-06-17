@@ -38,4 +38,5 @@ stages:
             which pytest
             cat $(which pytest)
             sudo python2 -m pytest -h
+            echo test
   
