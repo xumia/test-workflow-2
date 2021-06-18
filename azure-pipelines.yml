@@ -35,7 +35,6 @@ stages:
         cat $(which pytest)
         sudo python2 -m pytest -h
         echo test
-        sudo python3 -m pytest -h
   - template: multi-jobs-template.yml
     parameters:
       jobs:
@@ -44,10 +43,4 @@ stages:
         steps:
         - script: |
             which pytest
-            sudo pip2 install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
-            which pytest
-            cat $(which pytest)
-            sudo python2 -m pytest -h
-            sudo python3 -m pytest -h
-            echo test
   
