@@ -32,7 +32,8 @@ stages:
         which pytest
         cat $(which pytest)
         sudo python2 -m pytest -h
-            echo test
+        echo test
+        sudo python3 -m pytest -h
   - template: multi-jobs-template.yml
     parameters:
       jobs:
