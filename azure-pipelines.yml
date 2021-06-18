@@ -33,7 +33,7 @@ stages:
         pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
         which pytest
         cat $(which pytest)
-        sudo $(which pip) -m pytest -h
+        sudo $(which pytest) -h
         echo test
   - template: multi-jobs-template.yml
     parameters:
