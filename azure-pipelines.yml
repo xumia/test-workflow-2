@@ -19,12 +19,12 @@ stages:
 - stage: Build
   pool:
     vmImage: 'ubuntu-latest'
-  strategy:
-    matrix:
-      Python27:
-        python.version: '2.7'
   jobs:
   - job: Test1
+    strategy:
+      matrix:
+        Python27:
+          python.version: '2.7'
     steps:
     - script: |
         sudo pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
