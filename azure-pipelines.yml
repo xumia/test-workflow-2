@@ -19,6 +19,10 @@ stages:
 - stage: Build
   pool:
     vmImage: 'ubuntu-latest'
+  strategy:
+    matrix:
+      Python27:
+        python.version: '2.7'
   jobs:
   - job: Test1
     steps:
