@@ -23,17 +23,21 @@ stages:
   - job: Test1
     displayName: Test1
     steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python 2.7'
-      inputs:
-        versionSpec: '2.7'
+    - script: |
+        sudo apt-get install -y python2.7 libpython2.7
+        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+        python2.7 get-pip.py
+        pip --version
+      displayName: "Install Python2.7"
     - script: |
         which pip
         cat $(which pip)
-        pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
+        #pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
+        pip install pytest==4.6.2
         which pytest
         cat $(which pytest)
         sudo $(which pytest) -h
+        sudo python2.7 -m pytest -h
         echo test
   - template: multi-jobs-template.yml
     parameters:
