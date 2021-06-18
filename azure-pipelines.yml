@@ -30,7 +30,7 @@ stages:
     - script: |
         which pip
         cat $(which pip)
-        sudo pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
+        pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
         which pytest
         cat $(which pytest)
         sudo python2 -m pytest -h
