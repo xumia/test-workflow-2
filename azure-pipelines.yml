@@ -27,6 +27,10 @@ stages:
         Python27:
           python.version: '2.7'
     steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '2.7'
     - script: |
         which pip
         cat $(which pip)
