@@ -21,6 +21,7 @@ stages:
     vmImage: 'ubuntu-latest'
   jobs:
   - job: Test1
+    displayName: Test1
     strategy:
       matrix:
         Python27:
