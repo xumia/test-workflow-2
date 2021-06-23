@@ -27,6 +27,10 @@ stages:
         sudo ./build_and_install_module.sh
       displayName: "Install dependencies"
     - script: |
+        sudo dmesg
+      condition: always()
+      displayName: "dmesg"
+    - script: |
         set -x
         sudo docker load -i ../docker-sonic-vs.gz
         docker ps
