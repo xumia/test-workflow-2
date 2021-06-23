@@ -18,7 +18,7 @@ parameters:
 stages:
 - stage: Build
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-18.04'
   jobs:
   - job: Test1
     displayName: Test1
