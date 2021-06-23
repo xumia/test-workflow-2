@@ -24,28 +24,15 @@ stages:
     displayName: Test1
     steps:
     - script: |
-        sudo apt-get install -y python2.7 libpython2.7
-        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-        sudo python2.7 get-pip.py
-        sudo pip --version
-      displayName: "Install Python2.7"
+        sudo ./build_and_install_module.sh
+      displayName: "Install dependencies"
     - script: |
-        which pip
-        cat $(which pip)
-        #pip install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0
-        sudo pip install pytest==4.6.2
-        which pytest
-        cat $(which py.test)
-        sudo $(which py.test) -h
-        sudo python2.7 -m pytest -h
-        sudo py.test -h
-        echo test
-  - template: multi-jobs-template.yml
-    parameters:
-      jobs:
-      - job: Test
-        condition: false
-        steps:
-        - script: |
-            which pytest
+        set -x
+        sudo docker load -i ../docker-sonic-vs.gz
+        docker ps
+        ip netns list
+        uname -a
+        sudo /sbin/ip link add Vrf1 type vrf table 1001 || { echo 'vrf command failed' ; exit 1; }
+        sudo /sbin/ip link del Vrf1 type vrf table 1001
+      displayName: "Test"
   
