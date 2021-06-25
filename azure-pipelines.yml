@@ -7,6 +7,12 @@ trigger: none
 pr: none
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+resources:
+  repositories:
+    - repository: test-pipelines
+      type: github
+      name: xumia/test-pipelines
+      ref: refs/tags/tag1
 
 parameters:
 - name: "platforms"
@@ -23,6 +29,8 @@ stages:
   - job: Test1
     displayName: Test1
     steps:
+    - checkout: test-pipelines
+      displayName: "Checkout test-pipelines"
     - script: |
         sudo ./build_and_install_module.sh
       displayName: "Install dependencies"
