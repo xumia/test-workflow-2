@@ -13,6 +13,7 @@ resources:
       type: github
       name: xumia/test-pipelines
       ref: refs/tags/tag1
+      endpoint: build
 
 parameters:
 - name: "platforms"
