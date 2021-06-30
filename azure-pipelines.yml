@@ -15,7 +15,7 @@ resources:
     - repository: test-pipelines
       type: github
       name: xumia/test-pipelines
-      ref: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
+      ref: ${{ variables.COMMIT_ID }}
       endpoint: build
 
 parameters:
