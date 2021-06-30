@@ -17,7 +17,7 @@ resources:
       type: github
       name: xumia/test-pipelines
       ref: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
-      endpoint: ${{ variables.ENDPOINT }}
+      endpoint: $(ENDPOINT)
 
 parameters:
 - name: "platforms"
