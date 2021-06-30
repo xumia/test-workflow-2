@@ -6,13 +6,16 @@
 trigger: none
 pr: none
 
+variables:
+  COMMIT_ID: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
+
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 resources:
   repositories:
     - repository: test-pipelines
       type: github
       name: xumia/test-pipelines
-      ref: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
+      ref: $(COMMIT_ID)
       endpoint: build
 
 parameters:
