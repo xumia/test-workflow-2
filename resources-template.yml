@@ -2,6 +2,11 @@ parameters:
 - name: "commitId"
   type: string
   default: "e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09"
+- name: "platforms"
+  type: object
+  default:
+  - vs
+  - broadcom
 
 resources:
   repositories:
@@ -10,3 +15,31 @@ resources:
       name: xumia/test-pipelines
       ref: ${{ parameters.commitId }}
       endpoint: build
+
+
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-18.04'
+  jobs:
+  - job: Test1
+    displayName: Test1
+    steps:
+    - checkout: test-pipelines
+      displayName: "Checkout test-pipelines"
+    - script: |
+        sudo ./build_and_install_module.sh
+      displayName: "Install dependencies"
+    - script: |
+        sudo dmesg
+      condition: always()
+      displayName: "dmesg"
+    - script: |
+        set -x
+        sudo docker load -i ../docker-sonic-vs.gz
+        docker ps
+        ip netns list
+        uname -a
+        sudo /sbin/ip link add Vrf1 type vrf table 1001 || { echo 'vrf command failed' ; exit 1; }
+        sudo /sbin/ip link del Vrf1 type vrf table 1001
+      displayName: "Test"
