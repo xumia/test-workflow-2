@@ -21,7 +21,7 @@ parameters:
   - vs
   - broadcom
 
-extends:
+resources:
   template: resources-template.yml
 
 stages:
