@@ -11,13 +11,8 @@ variables:
   ENDPOINT: build
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-resources:
-  repositories:
-    - repository: test-pipelines
-      type: github
-      name: xumia/test-pipelines
-      ref: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
-      endpoint: $(ENDPOINT)
+
+
 
 parameters:
 - name: "platforms"
@@ -25,6 +20,9 @@ parameters:
   default:
   - vs
   - broadcom
+
+extends:
+  template: resources-template.yml
 
 stages:
 - stage: Build
