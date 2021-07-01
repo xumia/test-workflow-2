@@ -1,0 +1,12 @@
+parameters:
+- name: "commitId"
+  type: string
+  default: "e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09"
+
+resources:
+  repositories:
+    - repository: test-pipelines
+      type: github
+      name: xumia/test-pipelines
+      ref: ${{ parameters.commitId }}
+      endpoint: build
