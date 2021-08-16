@@ -20,8 +20,8 @@ stages:
   - job: Test1
     displayName: Test1
     steps:
-    - checkout: test-pipelines
-      displayName: "Checkout test-pipelines"
+    - checkout: self
+      displayName: "Checkout test-workflow"
     - script: |
         echo Test2
       displayName: "Test2"
