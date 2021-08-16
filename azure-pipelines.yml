@@ -12,5 +12,16 @@ variables:
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
-extends:
-  template: resources-template.yml
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-20.04'
+  jobs:
+  - job: Test1
+    displayName: Test1
+    steps:
+    - checkout: test-pipelines
+      displayName: "Checkout test-pipelines"
+    - script: |
+        echo Test2
+      displayName: "Test2"
