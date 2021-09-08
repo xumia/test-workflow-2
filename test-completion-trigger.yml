@@ -1,1 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+  - pipeline: test-workflow
+    source: xumia.test-workflow
+    trigger: true
+
+variables:
+  COMMIT_ID: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
+  ENDPOINT: build
+
+name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-20.04'
+  jobs:
+  - job: Test1
+    displayName: Test1
+    steps:
+    - checkout: self
+      displayName: "Checkout test-workflow"
+    - script: |
+        echo Test2
+      displayName: "Test2"
