@@ -1,15 +1,15 @@
 # This workflow will add comment in pull request
 #
 
-name: automerge
+name: add_comment
 on:
-  check_suite:
+  check_run:
     types:
       - completed
 
 jobs:
   comment:
-    if: github.event.check_suite.app.name == 'Azure Pipelines' &&  github.event.check_suite.conclusion == 'success'
+    if: github.event.check_run.app.name == 'Azure Pipelines' &&  github.event.check_run.check_suite.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Find Comment
@@ -27,5 +27,5 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           Build output
-          ${{ steps.build.outputs.build-log }}
+          ${{ github.event.pull_request.number }}
         edit-mode: replace
