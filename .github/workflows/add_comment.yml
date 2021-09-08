@@ -12,6 +12,12 @@ jobs:
     if: github.event.check_run.name == 'xumia.test-workflow' && github.event.check_run.app.name == 'Azure Pipelines' && github.event.check_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
+    - run: |
+        external_id=${{ github.event.check_run.external_id }}
+        pipeline_id=$(echo $external_id | cut -d'|' -f1)
+        run_id=$(echo $external_id | cut -d'|' -f2)
+        project_id=$(echo $external_id | cut -d'|' -f3)
+        echo "$pipeline_id, $run_id, $project_id"
     - name: Find Comment
       uses: peter-evans/find-comment@v1
       id: fc
@@ -19,12 +25,6 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         comment-author: 'github-actions[bot]'
         body-includes: Build output
-    - run: |
-        external_id=${{ github.event.check_run.external_id }}
-        pipeline_id=$(echo $external_id | cut -d'|' -f1)
-        run_id=$(echo $external_id | cut -d'|' -f2)
-        project_id=$(echo $external_id | cut -d'|' -f3)
-        echo "$pipeline_id, $run_id, $project_id"
     - name: Create or update comment
       uses: peter-evans/create-or-update-comment@v1
       with:
