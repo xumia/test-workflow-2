@@ -87,13 +87,13 @@ stages:
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
       displayName: 'Publish coverage'
-    - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    - ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['DIFF_COVER_DISABLE'], 'true') }}:
       - script: |
           sudo pip install diff-cover
           target_branch=$(System.PullRequest.TargetBranch)
           compare_branch=origin/${target_branch#refs/heads/}
           mkdir -p diff-cover/htmlcov
-          converage_files="$CODE_COVERAGE_FILES"
+          converage_files="$DIFF_COVER_CODE_COVERAGE_FILES"
           if [ -z "$converage_files" ]; then
             converage_files="$(find . -maxdepth 2 -name coverage.xml)"
           fi
