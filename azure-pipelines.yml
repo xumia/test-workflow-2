@@ -75,9 +75,12 @@ stages:
         diff-cover **/coverage.xml --compare-branch=$compare_branch
       #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
+    - script: |
+        sudo apt-get install npm
+        npm install cobertura-merge
+        node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/python/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/python/htmlcov'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
       displayName: 'Publish coverage'
