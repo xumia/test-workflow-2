@@ -108,7 +108,7 @@ stages:
               'value': json.dumps(properties)
             }
           ]
-          uri="$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds/$(Build.BuildId)/properties?api-version=6.0-preview.1"
+          url="$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds/$(Build.BuildId)/properties?api-version=6.0-preview.1"
           authentication='Bearer {0}'.format('$(SYSTEM_ACCESSTOKEN)')
           headers = {"Authorization":authentication, "Content-Type":"application/json-patch+json"}
           response = requests.patch(url, headers=headers, data=json.dumps(data))
