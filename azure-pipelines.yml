@@ -79,7 +79,7 @@ stages:
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
         npm install cobertura-merge
-        npm list --depth=0 | head -n 1
+        npm list --depth=0 2>/dev/null
         echo "pwd=$(pwd)"
         ~/node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
       displayName: "Merge full coverage"
