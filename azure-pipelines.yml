@@ -77,12 +77,6 @@ stages:
         mkdir -p diff-cover/htmlcov
         diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
         echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
-
-        base64pat=$(printf "%s"":$SYSTEM_ACCESSTOKEN" | base64)
-        header1="Authorization: Basic $base64pat"
-        header2="Content-Type:application/json-patch+json"
-        data="[{\"op\": \"add\", \"path\": \"/Alias\", \"value\": \"Frabrikam\"}]"
-        curl -X PATCH -H "$header1" -H "$header3" -d "$data" "$uri"
       condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
       continueOnError: true
