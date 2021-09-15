@@ -75,10 +75,12 @@ stages:
         failTaskOnFailedTests: true
       condition: succeededOrFailed()
       displayName: 'Publish Python test results'
-    - script: |
+    - script:
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
         npm install cobertura-merge
+      displayName: 'Install cobertura-merge'
+    - script: |
         node_root=$(npm list --depth=0 2>/dev/null | head -n 1)
         $node_root/node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
         mkdir -p .coverage
