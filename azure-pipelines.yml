@@ -49,13 +49,6 @@ stages:
         python3 setup.py bdist_wheel
         pytest --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
       displayName: 'Build python'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/python/junit/test-results.xml'
-        testRunTitle: Python
-        failTaskOnFailedTests: true
-      condition: succeededOrFailed()
-      displayName: 'Publish Python test results'
     - script: |
         cd golang
         go get github.com/axw/gocov/...
@@ -74,6 +67,13 @@ stages:
         diff-cover **/coverage.xml --compare-branch=$compare_branch
       #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/python/junit/test-results.xml'
+        testRunTitle: Python
+        failTaskOnFailedTests: true
+      condition: succeededOrFailed()
+      displayName: 'Publish Python test results'
     - script: |
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
