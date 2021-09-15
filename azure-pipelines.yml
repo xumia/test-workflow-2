@@ -76,9 +76,11 @@ stages:
       #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - script: |
+        # A workaround to merge converage files for full coverage
         sudo apt-get install npm
         npm install cobertura-merge
         node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
+      displayName: "Merge full coverage"
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
