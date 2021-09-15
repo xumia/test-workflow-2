@@ -26,7 +26,7 @@ stages:
         sudo apt-get install -y golang-go
         sudo apt-get install -y gcovr
         sudo apt-get install python3-pip
-        sudo pip3 install pytest
+        sudo pip3 install pytest pytest-cov
         cat $(which pytest)
         pytest --version
         pytest --help
