@@ -69,8 +69,8 @@ stages:
       displayName: 'Build golang'
     - script: |
         sudo pip3 install diff-cover
-        target_branch=$(System.PullRequest.TargetBranch)
-        compare_branch=origin/${target_branch#refs/heads/}
+        #target_branch=$(System.PullRequest.TargetBranch)
+        #compare_branch=origin/${target_branch#refs/heads/}
         compare_branch=origin/master
         diff-cover **/coverage.xml --compare-branch=$compare_branch
       #condition: eq(variables['Build.Reason'], 'PullRequest')
@@ -78,6 +78,6 @@ stages:
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/python/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/python/htmlcov'
       displayName: 'Publish coverage'
