@@ -69,6 +69,7 @@ stages:
         compare_branch=origin/${target_branch#refs/heads/}
         mkdir -p diff-cover/htmlcov
         diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
+        echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
       condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - task: PublishTestResults@2
