@@ -93,7 +93,10 @@ stages:
           target_branch=$(System.PullRequest.TargetBranch)
           compare_branch=origin/${target_branch#refs/heads/}
           mkdir -p diff-cover/htmlcov
-          converage_files="$(find . -maxdepth 2 -name coverage.xml)"
+          converage_files="$CODE_COVERAGE_FILES"
+          if [ -z "$converage_files" ]; then
+            converage_files="$(find . -maxdepth 2 -name coverage.xml)"
+          fi
           if [ -z "$converage_files" ]; then
             echo "Skipped, the coverage files not found"
             exit 0
