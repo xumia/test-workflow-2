@@ -28,6 +28,8 @@ stages:
         sudo apt-get install python3-pip
         sudo pip3 install pytest
         cat $(which pytest)
+        pytest --version
+        pytest --help
       displayName: 'Install packages'
     - script: |
         set -ex
