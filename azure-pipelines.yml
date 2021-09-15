@@ -71,8 +71,9 @@ stages:
         sudo pip3 install diff-cover
         target_branch=$(System.PullRequest.TargetBranch)
         compare_branch=origin/${target_branch#refs/heads/}
+        compare_branch=origin/master
         diff-cover **/coverage.xml --compare-branch=$compare_branch
-      condition: eq(variables['Build.Reason'], 'PullRequest')
+      #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - task: PublishCodeCoverageResults@1
       inputs:
