@@ -70,58 +70,58 @@ stages:
         failTaskOnFailedTests: true
       condition: succeededOrFailed()
       displayName: 'Publish Python test results'
-    - script: |
-        sudo pip install diff-cover
-        target_branch=$(System.PullRequest.TargetBranch)
-        compare_branch=origin/${target_branch#refs/heads/}
-        mkdir -p diff-cover/htmlcov
-        diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
-        echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
-      condition: eq(variables['Build.Reason'], 'PullRequest')
-      displayName: "Diff coverage"
-      continueOnError: true
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    - task: PythonScript@0
-      inputs:
-        scriptSource: inline
-        script: |
-          import json, requests, os
-          cover = {}
-          with open("diff-cover/diff-cover.json", "r") as f:
-            cover=json.load(f)
-          properties = {
-            'pullRequestId': $(System.PullRequest.PullRequestNumber),
-            'repoUri': '$(System.PullRequest.SourceRepositoryURI)',
-            'targetBranch': '$(System.PullRequest.TargetBranch)',
-            'sourceCommitId': '$(system.pullRequest.sourceCommitId)',
-            'sourceVersion': '$(Build.SourceVersion)',
-            'jobName': '$(System.JobName)',
-            'stageName': '$(System.StageName)',
-            'jobAttempt': '$(System.JobAttempt)',
-            'cover': cover,
-          }
-          data = [
-            {
-              'op': 'add',
-              'path': '/coverage-{0}'.format('$(System.JobName)'),
-              'value': json.dumps(properties)
+    - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+      - script: |
+          sudo pip install diff-cover
+          target_branch=$(System.PullRequest.TargetBranch)
+          compare_branch=origin/${target_branch#refs/heads/}
+          mkdir -p diff-cover/htmlcov
+          diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
+          echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
+        displayName: "Diff coverage"
+        continueOnError: true
+        env:
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      - task: PythonScript@0
+        inputs:
+          scriptSource: inline
+          script: |
+            import json, requests, os
+            cover = {}
+            with open("diff-cover/diff-cover.json", "r") as f:
+              cover=json.load(f)
+            properties = {
+              'pullRequestId': $(System.PullRequest.PullRequestNumber),
+              'repoUri': '$(System.PullRequest.SourceRepositoryURI)',
+              'targetBranch': '$(System.PullRequest.TargetBranch)',
+              'sourceCommitId': '$(system.pullRequest.sourceCommitId)',
+              'sourceVersion': '$(Build.SourceVersion)',
+              'jobName': '$(System.JobName)',
+              'stageName': '$(System.StageName)',
+              'jobAttempt': '$(System.JobAttempt)',
+              'cover': cover,
             }
-          ]
-          url="$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds/$(Build.BuildId)/properties?api-version=6.0-preview.1"
-          authentication='Bearer {0}'.format(os.environ['SYSTEM_ACCESSTOKEN'])
-          headers = {"Authorization":authentication, "Content-Type":"application/json-patch+json"}
-          response = requests.patch(url, headers=headers, data=json.dumps(data))
-          if (response.status_code == 200):
-            print('The request was succeeded.')
-          else:
-            print('The request was failed, with error: {0}'.format(response.status_code))
-            print('The failure reason is {0}'.format(response.reason))
-      displayName: 'Update Build coverage'
-      condition: succeeded()
-      continueOnError: true
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            data = [
+              {
+                'op': 'add',
+                'path': '/coverage-{0}'.format('$(System.JobName)'),
+                'value': json.dumps(properties)
+              }
+            ]
+            url="$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds/$(Build.BuildId)/properties?api-version=6.0-preview.1"
+            authentication='Bearer {0}'.format(os.environ.get('SYSTEM_ACCESSTOKEN'))
+            headers = {"Authorization":authentication, "Content-Type":"application/json-patch+json"}
+            response = requests.patch(url, headers=headers, data=json.dumps(data))
+            if (response.status_code == 200):
+              print('The request was succeeded.')
+            else:
+              print('The request was failed, with error: {0}'.format(response.status_code))
+              print('The failure reason is {0}'.format(response.reason))
+        displayName: 'Update Build coverage'
+        condition: succeeded()
+        continueOnError: true
+        env:
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     - script: |
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
