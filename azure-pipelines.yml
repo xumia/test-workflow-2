@@ -64,7 +64,8 @@ stages:
         #target_branch=$(System.PullRequest.TargetBranch)
         #compare_branch=origin/${target_branch#refs/heads/}
         compare_branch=origin/master
-        diff-cover **/coverage.xml --compare-branch=$compare_branch
+        mkdir -p htmlcov
+        diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover.html
       #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - task: PublishTestResults@2
