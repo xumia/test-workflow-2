@@ -51,6 +51,7 @@ stages:
         pytest --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
       displayName: 'Build python'
     - script: |
+        cd golang
         go get github.com/axw/gocov/...
         go get github.com/AlekSi/gocov-xml
         export PATH=$PATH:$(go env GOPATH)/bin
