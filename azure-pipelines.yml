@@ -7,8 +7,7 @@ trigger: none
 pr: none
 
 variables:
-  COMMIT_ID: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
-  ENDPOINT: build
+  disable.coverage.autogenerate: 'true'
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
