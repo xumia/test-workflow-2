@@ -23,18 +23,19 @@ stages:
     - checkout: self
       displayName: 'Checkout test-workflow'
     - script: |
+        sudo apt-get install -y golang-go
+        sudo apt-get install -y gcovr
+        sudo apt-get install python3-pip
+        sudo pip3 install pytest
+        cat $(which pytest)
+      displayName: 'Install packages'
+    - script: |
         set -ex
         curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
         sudo apt-add-repository https://packages.microsoft.com/ubuntu/20.04/prod
         sudo apt-get update
         sudo apt-get install -y dotnet-sdk-5.0
       displayName: 'Install .NET CORE'
-    - script: |
-        sudo apt-get install -y golang-go
-        sudo apt-get install -y gcovr
-        sudo apt-get install python3-pip
-        sudo pip3 install pytest
-      displayName: 'Install packages'
     - script: |
         cd cpp
         ./build.sh
