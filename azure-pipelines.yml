@@ -50,6 +50,13 @@ stages:
         python3 setup.py bdist_wheel
         pytest --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
       displayName: 'Build python'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/python/junit/test-results.xml'
+        testRunTitle: Python
+        failTaskOnFailedTests: true
+      condition: succeededOrFailed()
+      displayName: 'Publish Python test results'
     - script: |
         cd golang
         go get github.com/axw/gocov/...
@@ -58,7 +65,7 @@ stages:
         go test -race -coverprofile=coverage.txt -covermode=atomic
         gocov convert coverage.txt | gocov-xml -source $(pwd) > coverage.xml
         mkdir -p htmlcov
-        go tool cover -html=coverage.txt -o htmlcov/index.html
+        go tool cover -html=coverage.txt -o htmlcov/coverage.html
       displayName: 'Build golang'
     - script: |
         sudo pip3 install diff-cover
