@@ -81,12 +81,12 @@ stages:
         npm install cobertura-merge
         node_root=$(npm list --depth=0 2>/dev/null | head -n 1)
         $node_root/node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
-        mkdir -p full-cover
-        cp -rf **/htmlcov full-cover
-      displayName: "Merge full coverage"
+        mkdir -p .coverage
+        cp -rf **/htmlcov .coverage/
+      displayName: "Merge coverage"
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/full-cover/htmlcov'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/.coverage/htmlcov'
       displayName: 'Publish coverage'
