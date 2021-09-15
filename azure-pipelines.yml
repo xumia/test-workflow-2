@@ -17,11 +17,52 @@ stages:
   pool:
     vmImage: 'ubuntu-20.04'
   jobs:
-  - job: Test1
-    displayName: Test1
+  - job: Build
+    displayName: Build
     steps:
     - checkout: self
-      displayName: "Checkout test-workflow"
+      displayName: 'Checkout test-workflow'
     - script: |
-        echo Test2
-      displayName: "Test2"
+        set -ex
+        curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        sudo apt-add-repository https://packages.microsoft.com/debian/10/prod
+        sudo apt-get update
+        sudo apt-get install -y dotnet-sdk-5.0
+      displayName: 'Install .NET CORE'
+    - script: |
+        sudo apt-get install -y golang-go
+      displayName: 'Install packages'
+    - script: |
+        cd cpp
+        ./build.sh
+        gcovr -r ./ --exclude-unreachable-branches  -x -o coverage.xml
+        mkdir -p htmlcov
+        gcovr -r ./ --html --html-details -o htmlcov/index.html
+      displayName: 'Build cpp'
+    - script: |
+        cd python
+        python3 setup.py bdist_wheel
+        pytest --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml
+      displayName: 'Build python'
+    - script: |
+        go get github.com/axw/gocov/...
+        go get github.com/AlekSi/gocov-xml
+        export PATH=$PATH:$(go env GOPATH)/bin
+        go test -race -coverprofile=coverage.txt -covermode=atomic
+        gocov convert coverage.txt | gocov-xml -source $(pwd) > coverage.xml
+        mkdir -p htmlcov
+        go tool cover -html=coverage.txt -o htmlcov/index.html
+      displayName: 'Build golang'
+    - script: |
+        sudo pip3 install diff-cover
+        target_branch=$(System.PullRequest.TargetBranch)
+        compare_branch=origin/${target_branch#refs/heads/}
+        diff-cover **/coverage.xml --compare-branch=$compare_branch
+      condition: eq(variables['Build.Reason'], 'PullRequest')
+      displayName: "Diff coverage"
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+      displayName: 'Publish coverage'
