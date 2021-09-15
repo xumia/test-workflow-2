@@ -41,9 +41,9 @@ stages:
     - script: |
         cd cpp
         ./build.sh
-        gcovr -r ./ --exclude-unreachable-branches  -x -o coverage.xml
+        gcovr -r $(pwd) --exclude-unreachable-branches  -x -o coverage.xml
         mkdir -p htmlcov
-        gcovr -r ./ --html --html-details -o htmlcov/index.html
+        gcovr -r $(pwd) --html --html-details -o htmlcov/index.html
       displayName: 'Build cpp'
     - script: |
         cd python
