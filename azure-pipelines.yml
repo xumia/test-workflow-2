@@ -65,9 +65,8 @@ stages:
       displayName: 'Build golang'
     - script: |
         sudo pip3 install diff-cover
-        #target_branch=$(System.PullRequest.TargetBranch)
-        #compare_branch=origin/${target_branch#refs/heads/}
-        compare_branch=origin/master
+        target_branch=$(System.PullRequest.TargetBranch)
+        compare_branch=origin/${target_branch#refs/heads/}
         mkdir -p diff-cover/htmlcov
         diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
       condition: eq(variables['Build.Reason'], 'PullRequest')
