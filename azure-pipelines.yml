@@ -120,6 +120,8 @@ stages:
       displayName: 'Update Build coverage'
       condition: succeeded()
       continueOnError: true
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     - script: |
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
