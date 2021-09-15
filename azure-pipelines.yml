@@ -65,7 +65,7 @@ stages:
         #compare_branch=origin/${target_branch#refs/heads/}
         compare_branch=origin/master
         mkdir -p diff-cover/htmlcov
-        diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/diff-cover.html --json-report=diff-cover/diff-cover.json
+        diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
       #condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - task: PublishTestResults@2
@@ -75,7 +75,7 @@ stages:
         failTaskOnFailedTests: true
       condition: succeededOrFailed()
       displayName: 'Publish Python test results'
-    - script:
+    - script: |
         # A workaround to merge converage files for full coverage
         sudo apt-get install npm
         npm install cobertura-merge
