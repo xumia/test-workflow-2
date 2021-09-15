@@ -4,7 +4,10 @@
 # https://aka.ms/yaml
 
 trigger: none
-pr: none
+pr:
+  branches:
+    include:
+      - master
 
 variables:
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
