@@ -6,8 +6,9 @@
 trigger: none
 pr: none
 
-#variables:
-#  disable.coverage.autogenerate: 'true'
+variables:
+  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    disable.coverage.autogenerate: 'true'
 
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
@@ -66,7 +67,7 @@ stages:
         compare_branch=origin/master
         mkdir -p diff-cover/htmlcov
         diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
-      #condition: eq(variables['Build.Reason'], 'PullRequest')
+      condition: eq(variables['Build.Reason'], 'PullRequest')
       displayName: "Diff coverage"
     - task: PublishTestResults@2
       inputs:
@@ -88,5 +89,5 @@ stages:
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
-        #reportDirectory: '$(System.DefaultWorkingDirectory)/.coverage/htmlcov'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
       displayName: 'Publish coverage'
