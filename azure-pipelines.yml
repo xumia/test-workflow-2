@@ -93,8 +93,14 @@ stages:
           target_branch=$(System.PullRequest.TargetBranch)
           compare_branch=origin/${target_branch#refs/heads/}
           mkdir -p diff-cover/htmlcov
-          diff-cover **/coverage.xml --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
+          converage_files="$(find . -name coverage.xml)"
+          if [ -z "$converage_files" ]; then
+            echo "Skipped, the coverage files not found"
+            exit 0
+          fi
+          diff-cover $converage_files --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
           echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
+          echo "##vso[task.setvariable variable=has.coverage.files;]true"
         displayName: "Diff coverage"
         continueOnError: true
         env:
@@ -135,7 +141,7 @@ stages:
               print('The request was failed, with error: {0}'.format(response.status_code))
               print('The failure reason is {0}'.format(response.reason))
         displayName: 'Update Build coverage'
-        condition: succeeded()
+        condition: eq(variables['has.coverage.files'], 'true')
         continueOnError: true
         env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -145,3 +151,5 @@ stages:
           summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
           reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
         displayName: 'Publish coverage'
+        condition: eq(variables['has.coverage.files'], 'true')
+        continueOnError: true
