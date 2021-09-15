@@ -70,6 +70,23 @@ stages:
         failTaskOnFailedTests: true
       condition: succeededOrFailed()
       displayName: 'Publish Python test results'
+    - script: |
+        # A workaround to merge converage files for full coverage
+        sudo apt-get install npm
+        npm install cobertura-merge
+      displayName: 'Install cobertura-merge'
+    - script: |
+        node_root=$(npm list --depth=0 2>/dev/null | head -n 1)
+        $node_root/node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
+      displayName: "Merge coverage"
+      condition: succeeded()
+      continueOnError: true
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
+      displayName: 'Publish coverage'
     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
       - script: |
           sudo pip install diff-cover
@@ -122,20 +139,9 @@ stages:
         continueOnError: true
         env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    - script: |
-        # A workaround to merge converage files for full coverage
-        sudo apt-get install npm
-        npm install cobertura-merge
-      displayName: 'Install cobertura-merge'
-    - script: |
-        node_root=$(npm list --depth=0 2>/dev/null | head -n 1)
-        $node_root/node_modules/.bin/cobertura-merge -o coverage.xml cpp=cpp/coverage.xml python=python/coverage.xml golang=golang/coverage.xml
-      displayName: "Merge coverage"
-      condition: succeeded()
-      continueOnError: true
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
-      displayName: 'Publish coverage'
+      - task: PublishCodeCoverageResults@1
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
+          reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
+        displayName: 'Publish coverage'
