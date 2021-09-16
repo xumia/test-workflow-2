@@ -16,6 +16,11 @@ stages:
   pool:
     vmImage: 'ubuntu-20.04'
   jobs:
+  - job: Build0
+    displayName: Build0
+    steps:
+    - checkout: self
+      displayName: 'Checkout test-workflow'
   - job: Build
     displayName: Build
     steps:
