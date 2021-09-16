@@ -132,7 +132,7 @@ stages:
                 'sourceVersion': '$(Build.SourceVersion)',
                 'jobName': '$(Agent.JobName)',
                 'jobId': '$(System.JobId)',
-                'definitionName': '$(Build.DefinitionName)'
+                'definitionName': '$(Build.DefinitionName)',
                 'stageName': '$(System.StageName)',
                 'jobAttempt': '$(System.JobAttempt)',
                 'cover.threshold': threshold,
