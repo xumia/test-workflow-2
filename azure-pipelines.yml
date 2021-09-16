@@ -104,7 +104,7 @@ stages:
           diff-cover $converage_files --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
           echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
           echo "##vso[task.setvariable variable=has.coverage.files;]true"
-        displayName: "Diff coverage"
+        displayName: "Show diff coverage"
         continueOnError: true
         env:
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)
