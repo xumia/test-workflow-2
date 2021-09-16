@@ -87,7 +87,7 @@ stages:
           sudo pip install diff-cover
           target_branch=$(System.PullRequest.TargetBranch)
           compare_branch=origin/${target_branch#refs/heads/}
-          mkdir -p diff-cover/htmlcov
+          mkdir -p .coverage/htmlcov
           converage_files="$DIFF_COVER_COVERAGE_FILES"
           if [ -z "$converage_files" ]; then
             converage_files="$(find . -maxdepth 2 -name coverage.xml)"
@@ -96,7 +96,7 @@ stages:
             echo "Skipped, the coverage files not found"
             exit 0
           fi
-          diff-cover $converage_files --compare-branch=$compare_branch --html-report=diff-cover/htmlcov/index.html --json-report=diff-cover/diff-cover.json
+          diff-cover $converage_files --compare-branch=$compare_branch --html-report=.coverage/htmlcov/index.html --json-report=.coverage/diff-cover.json
           echo "##vso[task.setvariable variable=disable.coverage.autogenerate;]true"
           echo "##vso[task.setvariable variable=has.coverage.files;]true"
         displayName: "Show diff coverage"
@@ -117,7 +117,7 @@ stages:
               except:
                 print('Failed to parse the DIFF_COVER_CHECK_THRESHOLD={0} to float'.format(checkThreshold))
                 exit(0)
-              with open("diff-cover/diff-cover.json", "r") as f:
+              with open(".coverage/diff-cover.json", "r") as f:
                 cover=json.load(f)
               properties = {
                 'pullRequestId': $(System.PullRequest.PullRequestNumber),
