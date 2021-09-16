@@ -128,7 +128,7 @@ stages:
                 'jobName': '$(System.JobName)',
                 'stageName': '$(System.StageName)',
                 'jobAttempt': '$(System.JobAttempt)',
-                'threshold': threshold,
+                'cover.threshold': threshold,
                 'cover.num_lines': cover.get("total_num_lines"),
                 'cover.num_violations': cover.get("total_num_violations"),
                 'cover.percent_covered': cover.get("total_percent_covered"),
