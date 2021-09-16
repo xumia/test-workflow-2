@@ -9,10 +9,6 @@ pr:
     include:
       - master
 
-variables:
-  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-    disable.coverage.autogenerate: 'true'
-
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 stages:
@@ -166,5 +162,5 @@ stages:
             reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
           displayName: 'Publish coverage'
           #condition: eq(variables['has.coverage.files'], 'true')
-          condition: false
+          condition: true
           continueOnError: true
