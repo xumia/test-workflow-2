@@ -108,7 +108,7 @@ stages:
             script: |
               import json, requests, os
               cover = {}
-              checkThreshold='$DIFF_COVER_CHECK_THRESHOLD'
+              checkThreshold=os.environ.get('DIFF_COVER_CHECK_THRESHOLD')
               if not checkThreshold:
                 checkThreshold = '0'
               threshold = 0
