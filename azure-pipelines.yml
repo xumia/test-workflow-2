@@ -114,11 +114,11 @@ stages:
               import json, requests, os
               cover = {}
               checkThreshold='$[variables.DIFF_COVER_CHECK_THRESHOLD]'
-              if not threshold:
+              if not checkThreshold:
                 checkThreshold = '0'
               threshold = 0
               try:
-                threshold = float(value)
+                threshold = float(checkThreshold)
               except:
                 print('Failed to parse the DIFF_COVER_CHECK_THRESHOLD={0} to float'.format(checkThreshold))
                 exit(0)
