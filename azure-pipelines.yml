@@ -131,6 +131,7 @@ stages:
                 'sourceCommitId': '$(system.pullRequest.sourceCommitId)',
                 'sourceVersion': '$(Build.SourceVersion)',
                 'jobName': '$(Agent.JobName)',
+                'jobId': '$(System.JobId)',
                 'stageName': '$(System.StageName)',
                 'jobAttempt': '$(System.JobAttempt)',
                 'cover.threshold': threshold,
