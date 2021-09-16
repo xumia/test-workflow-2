@@ -87,7 +87,7 @@ stages:
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
       displayName: 'Publish coverage'
-    - ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['DIFF_COVER_DISABLE'], 'true') }}:
+    - ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['DIFF_COVER_DISABLE'], 'true')) }}:
       - script: |
           sudo pip install diff-cover
           target_branch=$(System.PullRequest.TargetBranch)
