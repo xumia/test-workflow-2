@@ -113,7 +113,7 @@ stages:
             script: |
               import json, requests, os
               cover = {}
-              checkThreshold='$[variables.DIFF_COVER_CHECK_THRESHOLD]'
+              checkThreshold='$DIFF_COVER_CHECK_THRESHOLD'
               if not checkThreshold:
                 checkThreshold = '0'
               threshold = 0
