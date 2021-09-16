@@ -134,7 +134,7 @@ stages:
               data = [
                 {
                   'op': 'add',
-                  'path': '/coverage-{0}'.format('$(System.JobName)'),
+                  'path': '/codediff.{0}'.format('$(System.JobName)'),
                   'value': json.dumps(properties)
                 }
               ]
