@@ -125,7 +125,7 @@ stages:
                 'targetBranch': '$(System.PullRequest.TargetBranch)',
                 'sourceCommitId': '$(system.pullRequest.sourceCommitId)',
                 'sourceVersion': '$(Build.SourceVersion)',
-                'jobName': '$(System.JobName)',
+                'jobName': '$(Agent.JobName)',
                 'stageName': '$(System.StageName)',
                 'jobAttempt': '$(System.JobAttempt)',
                 'cover.threshold': threshold,
@@ -136,7 +136,7 @@ stages:
               data = [
                 {
                   'op': 'add',
-                  'path': '/codediff.{0}'.format('$(System.JobName)'),
+                  'path': '/codediff.{0}'.format('$(Agent.JobName)'),
                   'value': json.dumps(properties)
                 }
               ]
