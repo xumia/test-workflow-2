@@ -78,11 +78,9 @@ stages:
       condition: succeeded()
       continueOnError: true
     - task: PublishCodeCoverageResults@1
-      condition: true
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/python/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/python/htmlcov'
       displayName: 'Publish coverage'
     - ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['DIFF_COVER_DISABLE'], 'true')) }}:
       - script: |
@@ -161,6 +159,5 @@ stages:
             summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
             reportDirectory: '$(System.DefaultWorkingDirectory)/diff-cover/htmlcov'
           displayName: 'Publish coverage'
-          #condition: eq(variables['has.coverage.files'], 'true')
-          condition: true
+          condition: eq(variables['has.coverage.files'], 'true')
           continueOnError: true
