@@ -82,6 +82,7 @@ stages:
       condition: succeeded()
       continueOnError: true
     - task: PublishCodeCoverageResults@1
+      condition: false
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/python/coverage.xml'
