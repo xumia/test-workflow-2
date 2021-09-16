@@ -106,8 +106,6 @@ stages:
           echo "##vso[task.setvariable variable=has.coverage.files;]true"
         displayName: "Show diff coverage"
         continueOnError: true
-        env:
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
       - task: PythonScript@0
         inputs:
           scriptSource: inline
