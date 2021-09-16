@@ -111,7 +111,7 @@ stages:
           inputs:
             scriptSource: inline
             script: |
-              import json, requests, os
+              import json, requests, os, datetime
               cover = {}
               checkThreshold=os.environ.get('DIFF_COVER_CHECK_THRESHOLD')
               if not checkThreshold:
@@ -135,6 +135,7 @@ stages:
                 'definitionName': '$(Build.DefinitionName)',
                 'stageName': '$(System.StageName)',
                 'jobAttempt': '$(System.JobAttempt)',
+                'timestamp': datetime.datetime.now().isoformat(),
                 'cover.threshold': threshold,
                 'cover.num_lines': cover.get("total_num_lines"),
                 'cover.num_violations': cover.get("total_num_violations"),
