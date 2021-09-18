@@ -24,7 +24,7 @@ stages:
       displayName: "Checkout test-workflow"
     - task: UpdateBuildProperties@1
       inputs:
-        properties: '{"/test":"test1"}'
+        properties: '[{ "op": "add",  "path": "/codediff", "value": "test"}]'
       displayName: "Update task properties"
     - task: SampleExtensionTask@0
       inputs:
