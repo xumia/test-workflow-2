@@ -33,4 +33,10 @@ stages:
     - script: |
         echo test
       displayName: "test"
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo abc
+      displayName: "[Auto] Show diff coverage"
+      continueOnError: true
       
