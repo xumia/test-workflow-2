@@ -26,7 +26,7 @@ stages:
       inputs:
         properties: '{"test":"test"}'
       displayName: "Update build properties"
-    - task: SampleExteionsTask@0.0.2
+    - task: SampleExteionsTask@0
       inputs:
         samplestring: 'Hello'
       displayName: "SampleExteionsTask"
