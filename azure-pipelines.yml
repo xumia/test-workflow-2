@@ -22,10 +22,11 @@ stages:
     steps:
     - checkout: self
       displayName: "Checkout test-workflow"
-    - task: UpdateBuildProperties
+    - task: UpdateBuildProperties@1
       inputs:
         properties: '{"test":"test"}'
       displayName: "Update build properties"
+
     - script: |
         echo test
       displayName: "test"
