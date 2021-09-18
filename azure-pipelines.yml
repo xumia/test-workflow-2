@@ -26,10 +26,10 @@ stages:
       inputs:
         properties: '{"test":"test"}'
       displayName: "Update build properties"
-    - task: SampleExteionsTask@0
+    - task: SampleExtensionTask@0
       inputs:
         samplestring: 'Hello'
-      displayName: "SampleExteionsTask"
+      displayName: "SampleExtensionTask"
     - script: |
         echo test
       displayName: "test"
