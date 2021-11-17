@@ -32,6 +32,7 @@ steps:
 
       authentication = 'Basic {0}'.format(os.environ.get("ACCESS_TOKEN"))
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
+      print(url)
       defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
       definitions = "${{ parameters.definitions }}"
       for line in definitions.splitlines():
