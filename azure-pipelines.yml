@@ -32,6 +32,7 @@ steps:
       from urllib import request
 
       authentication = 'Basic {0}'.format(os.environ.get("MY_TOKEN"))
+      print(authentication)
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
       defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
