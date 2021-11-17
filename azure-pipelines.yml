@@ -23,7 +23,7 @@ pool:
 steps:
 - task: PythonScript@0
   env:
-    ACCESS_TOKEN: $(System.AccessToken)
+    ACCESS_TOKEN: '$(System.AccessToken)'
   inputs:
     scriptSource: inline
     script: |
