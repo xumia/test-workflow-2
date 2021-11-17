@@ -3,36 +3,53 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger: none
-pr:
-  branches:
-    include:
-      - test
+trigger:
+  - master
 
-variables:
-  COMMIT_ID: e1e81264dc1d6362c9c3ee3b7752ad9e035c4a09
-  ENDPOINT: build
+pr: none
 
-name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+parameters:
+- name: definitions
+  type: string
+  default: |
+    3,main 202012
+- name: defaultBranches
+  type: string
+  default: 'main master 202111 202106 202012 202006 201911'
 
-stages:
-- stage: Build
-  pool:
-    vmImage: 'ubuntu-20.04'
-  jobs:
-  - job: Test1
-    displayName: Test1
-    steps:
-    - checkout: self
-      displayName: "Checkout test-workflow"
-    - task: UpdateBuildProperties@1
-      inputs:
-        properties: '[{ "op": "add",  "path": "/codediff", "value": "test"}]'
-      displayName: "Update task properties"
-    - task: SampleExtensionTask@0
-      inputs:
-        samplestring: 'Hello'
-      displayName: "SampleExtensionTask"
-    - script: |
-        echo test
-      displayName: "test"
+pool:
+  vmImage: 'ubuntu-20.04'
+
+steps:
+- task: PythonScript@0
+  env:
+    ACCESS_TOKEN: $(System.AccessToken)
+  inputs:
+    scriptSource: inline
+    script: |
+      import datetime, base64, json, time, os, re
+      from urllib import request
+
+      authentication = 'Basic {0}'.format(os.environ.get("ACCESS_TOKEN"))
+      url = '${{ System.CollectionUri }}${{ System.TeamProjectId }}/_apis/build/builds?api-version=6.0'
+      defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
+      definitions = "${{ parameters.definitions }}"
+      for line in definitions.splitlines():
+        items = line.split(',')
+        definitionId = items[0]
+        branches = defaultBranches
+        if len(items) > 1:
+          branches = items[1].split(' ')
+
+        for branch in branches:
+          req = request.Request(url, method="POST")
+          req.add_header('Content-Type', 'application/json')
+          req.add_header('Authorization', authentication)
+          data = {}
+          definition = {}
+          definition['id'] = definitionId
+          definition['sourceBranch'] = branch
+          data['definition'] = definition
+          r = request.urlopen(req, data=data)
+          content = r.read()
+          print(content)
