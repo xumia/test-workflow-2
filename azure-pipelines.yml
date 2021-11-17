@@ -12,7 +12,7 @@ parameters:
 - name: definitions
   type: string
   default: |
-    3,main 202012
+    3,main
 - name: defaultBranches
   type: string
   default: 'main master 202111 202106 202012 202006 201911'
