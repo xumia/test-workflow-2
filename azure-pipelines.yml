@@ -51,6 +51,7 @@ steps:
           definition['id'] = definitionId
           definition['sourceBranch'] = branch
           data['definition'] = definition
+          print(data)
           r = request.urlopen(req, data=data)
           content = r.read()
           print(content)
