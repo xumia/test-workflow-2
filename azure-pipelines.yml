@@ -34,7 +34,7 @@ steps:
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
       defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
-      definitions = "${{ parameters.definitions }}"
+      definitions = """${{ parameters.definitions }}"""
       for line in definitions.splitlines():
         items = line.split(',')
         definitionId = items[0]
