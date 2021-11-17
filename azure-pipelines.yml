@@ -46,11 +46,12 @@ steps:
           req = request.Request(url, method="POST")
           req.add_header('Content-Type', 'application/json')
           req.add_header('Authorization', authentication)
-          data = {}
+          body = {}
           definition = {}
           definition['id'] = definitionId
           definition['sourceBranch'] = branch
-          data['definition'] = definition
+          body['definition'] = definition
+          data = bytes(json.dumps(body), encoding="utf-8")
           print(data)
           r = request.urlopen(req, data=data)
           content = r.read()
