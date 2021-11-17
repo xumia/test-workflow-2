@@ -24,13 +24,14 @@ steps:
 - task: PythonScript@0
   env:
     ACCESS_TOKEN: $(System.AccessToken)
+    MY_TOKEN: $(MyToken)
   inputs:
     scriptSource: inline
     script: |
       import datetime, base64, json, time, os, re
       from urllib import request
 
-      authentication = 'Basic {0}'.format(os.environ.get("ACCESS_TOKEN"))
+      authentication = 'Basic {0}'.format(os.environ.get("MY_TOKEN"))
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
       defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
