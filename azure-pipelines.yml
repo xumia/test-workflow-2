@@ -31,7 +31,7 @@ steps:
       import datetime, base64, json, time, os, re
       from urllib import request
 
-      authentication = 'Basic {0}'.format(os.environ.get("ACCESS_TOKEN"))
+      authentication = 'Bearer {0}'.format(os.environ.get("ACCESS_TOKEN"))
       print(authentication)
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
