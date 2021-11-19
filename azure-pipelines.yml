@@ -57,6 +57,9 @@ steps:
           req.add_header('Content-Type', 'application/json')
           req.add_header('Authorization', authentication)
           queryUrl = "{0}&$top=1&resultFilter=succeeded&branchName={1}".format(url, branch)
+          r = request.urlopen(queryUrl)
+          content = r.read()
+          print(content)
           body = {}
           reqDef = {}
           reqDef['id'] = definitionId
