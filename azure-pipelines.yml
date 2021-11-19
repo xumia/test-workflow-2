@@ -10,12 +10,22 @@ pr: none
 
 parameters:
 - name: definitions
-  type: string
-  default: |
-    3,main
+  type: object
+  default: 
+    - id: 3
+      branches:
+      - main
+      - 202012
 - name: defaultBranches
-  type: string
-  default: 'main master 202111 202106 202012 202006 201911'
+  type: object
+  default:
+  - main
+  - master
+  - 202111
+  - 202106 
+  - 202012 
+  - 202006
+  - 201911
 
 pool:
   vmImage: 'ubuntu-20.04'
@@ -35,15 +45,10 @@ steps:
       print(authentication)
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
-      defaultBranches = "${{ parameters.defaultBranches }}".split(' ')
-      definitions = """${{ parameters.definitions }}"""
-      for line in definitions.splitlines():
-        items = line.split(',')
-        definitionId = items[0]
-        branches = defaultBranches
-        if len(items) > 1:
-          branches = items[1].split(' ')
-
+      defaultBranches = joson.loads("${{ convertToJson(parameters.defaultBranches) }}")
+      definitions = joson.loads("${{ convertToJson(parameters.definitions) }}")
+      for definition in definitions:
+        definitionId = definition.get('branches', defaultBranches)
         for branch in branches:
           req = request.Request(url, method="POST")
           req.add_header('Content-Type', 'application/json')
