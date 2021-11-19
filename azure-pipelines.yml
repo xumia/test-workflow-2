@@ -56,6 +56,7 @@ steps:
           req = request.Request(url, method="POST")
           req.add_header('Content-Type', 'application/json')
           req.add_header('Authorization', authentication)
+          queryUrl = "{0}&$top=1&resultFilter=succeeded&branchName={1}".format(url, branch)
           body = {}
           reqDef = {}
           reqDef['id'] = definitionId
