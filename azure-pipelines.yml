@@ -21,11 +21,11 @@ parameters:
   default:
   - main
   - master
-  - 202111
-  - 202106 
-  - 202012 
-  - 202006
-  - 201911
+  - '202111'
+  - '202106'
+  - '202012'
+  - '202006'
+  - '201911'
 
 pool:
   vmImage: 'ubuntu-20.04'
@@ -50,7 +50,7 @@ steps:
       print(definitions)
       print(defaultBranches)
       for definition in definitions:
-        definitionId = definition.id
+        definitionId = definition['id']
         branches = definition.get('branches', defaultBranches)
         for branch in branches:
           req = request.Request(url, method="POST")
