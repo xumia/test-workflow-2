@@ -45,6 +45,7 @@ steps:
       print(authentication)
       url = '$(System.CollectionUri)$(System.TeamProjectId)/_apis/build/builds?api-version=6.0'
       print(url)
+      print("${{ convertToJson(parameters.defaultBranches) }}")
       defaultBranches = json.loads("${{ convertToJson(parameters.defaultBranches) }}")
       definitions = json.loads("${{ convertToJson(parameters.definitions) }}")
       for definition in definitions:
