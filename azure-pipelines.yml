@@ -19,8 +19,8 @@ parameters:
 - name: defaultBranches
   type: object
   default:
-  - main
-  - master
+  - 'main'
+  - 'master'
   - '202111'
   - '202106'
   - '202012'
