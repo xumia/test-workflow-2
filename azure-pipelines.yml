@@ -47,17 +47,20 @@ steps:
       print(url)
       defaultBranches = json.loads('''${{ convertToJson(parameters.defaultBranches) }}''')
       definitions = json.loads('''${{ convertToJson(parameters.definitions) }}''')
+      print(definitions)
+      print(defaultBranches)
       for definition in definitions:
-        definitionId = definition.get('branches', defaultBranches)
+        definitionId = definition.id
+        branches = definition.get('branches', defaultBranches)
         for branch in branches:
           req = request.Request(url, method="POST")
           req.add_header('Content-Type', 'application/json')
           req.add_header('Authorization', authentication)
           body = {}
-          definition = {}
-          definition['id'] = definitionId
-          definition['sourceBranch'] = branch
-          body['definition'] = definition
+          reqDef = {}
+          reqDef['id'] = definitionId
+          reqDef['sourceBranch'] = branch
+          body['definition'] = reqDef
           data = bytes(json.dumps(body), encoding="utf-8")
           print(data)
           r = request.urlopen(req, data=data)
